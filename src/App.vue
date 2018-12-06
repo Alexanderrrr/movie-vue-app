@@ -1,17 +1,32 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+        <h5 class="my-0 mr-md-auto navbar-brand">Movies</h5>
+        <movie-search />
+        <nav class="my-2 my-md-0 mr-md-3">
+          <router-link class="p-2 text-dark" :to="{name:'movies'}">Posts</router-link>
+        </nav>
+    </div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import MovieSearch from './components/MovieSearch'
+
 
 export default {
+
+
   name: 'app',
   components: {
-    HelloWorld
+    MovieSearch,
+  },
+
+  data(){
+    return {
+      movies: []
+    }
   }
 }
 </script>
