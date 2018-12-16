@@ -1,17 +1,14 @@
-import axios from 'axios'
+import HttpService from './Http-service.js'
 
-export class MovieService {
-  constructor(){
-    axios.defaults.baseURL = 'http://localhost:3000/api/'
-  }
-
+export class MovieService
+{
   getAll(){
-    return axios.get('movies')
+    return HttpService.get('movies')
+    .then(({data}) => data);
   }
 
   add(newMovie){
-    return axios.post('movies', newMovie)
-
+    return HttpService.post('movies', newMovie)
   }
 }
 

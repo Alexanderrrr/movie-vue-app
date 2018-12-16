@@ -9,8 +9,10 @@
 
 <script>
 import {EventBus} from '../services/EventBus'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 
 export default {
+
   data(){
     return {
       searchTermUpdated: "",
@@ -18,13 +20,15 @@ export default {
   },
 
   methods: {
+    ...mapMutations({search: 'CHANGE_SEARCH_TERM'}),
+
     filterMovies() {
-      EventBus.$emit('sentFilter', this.searchTermUpdated)
+      this.search(this.searchTermUpdated)
     }
+
   }
 }
 </script>
 
 <style lang="css">
 </style>
-<!-- v-if="product.name.toLowerCase().includes(searchTerm.toLowerCase())" -->

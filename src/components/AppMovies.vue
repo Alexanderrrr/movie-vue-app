@@ -1,62 +1,75 @@
 <template>
   <div>
-    <h5>Movies Selected: {{counter}}</h5>
-    <button class="btn btn-outline-success">Select All</button><br><br>
-    <button class="btn btn-outline-default">Deselect All</button>
-
+    <h5>Movies Selected: {{selectedMovies.length}}</h5>
+    <button @click="selectAll" class="btn btn-outline-success">Select All</button><br><br>
+    <button @click="deselectAll" class="btn btn-outline-default">Deselect All</button>
     <div class="container jumbotron">
         <template v-if="errors.length">
           <ul>
-            <li v-for="error in errors" class="p-3 mb-2 bg-danger text-white rounded">{{ error }}</li>
+            <li v-for="error in errors" :key="error.id" class="p-3 mb-2 bg-danger text-white rounded">{{ error }}</li>
           </ul>
         </template>
-        <template v-else="movie.title.toLowerCase().includes(searchTerm.toLowerCase())">
-          <ul class="list-group" v-for="movie in movies" :key="movie.id">
-            <movie-row :movie="movie" @callParentFunction="selected()" /><hr>
-          </ul>
+        <template v-else>
+          <div v-for="movie in movies" :key="movie.id">
+            <ul v-if="movie.title.toLowerCase().includes(searchTermTwo.toLowerCase())" class="list-group">
+              <movie-row :movie="movie" @callParentFunction="selected(movie)" /><hr>
+            </ul>
+          </div>
         </template>
     </div>
   </div>
 </template>
 
 <script>
-import movieService from '../services/MovieService'
 import MovieRow from './MovieRow.vue'
-import { EventBus } from '../services/EventBus'
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
   beforeRouteEnter(to, from, next){
-    movieService.getAll()
-    .then(res => {
       next(vm => {
-        vm.movies = res.data
+        vm.setMovies()
       })
-    })
   },
-
-  created() {
-    EventBus.$on('sentFilter', searchTermUpdated => {
-      this.searchTerm = searchTermUpdated
-    })
-  }
-,
+  // created(){
+  //   this.setMovies();
+  // },
 
   components: {
     MovieRow
   },
-
   data(){
     return {
-      movies: [],
       searchTerm: '',
       errors: [],
-      counter: 0,
+      selectedMovies: []
+    }
+  },
+  methods: {
+    ...mapActions(['setMovies']),
+    selected(movie){
+      if (!this.selectedMovies.includes(movie)) {
+        return this.selectedMovies.push(movie)
+
+      } else {
+        alert("Allready selected!")
+      }
+    },
+
+    selectAll(){
+      this.selectedMovies = this.movies
+    },
+
+    deselectAll(){
+      return this.selectedMovies = []
     }
   },
 
-  methods: {
-    selected(){
-      this.counter++
+  computed: {
+    ...mapGetters({
+      movies: 'getMovies'
+    }),
+    searchTermTwo(){
+      return this.$store.getters.getSearchTerm
     }
   }
 
