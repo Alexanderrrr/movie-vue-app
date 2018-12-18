@@ -6,10 +6,10 @@
     <div class="container jumbotron">
         <template v-if="errors.length">
           <ul>
-            <li v-for="error in errors" :key="error.id" class="p-3 mb-2 bg-danger text-white rounded">{{ error }}</li>
+            <li v-for="error in errors" :key="error.id" class="p-3 mb-2 bg-danger text-white rounded">{{ error[0] }}</li>
           </ul>
         </template>
-        <template v-else>
+        <template>
           <div v-for="movie in movies" :key="movie.id">
             <ul v-if="movie.title.toLowerCase().includes(searchTermTwo.toLowerCase())" class="list-group">
               <movie-row :movie="movie" @callParentFunction="selected(movie)" /><hr>
@@ -25,14 +25,14 @@ import MovieRow from './MovieRow.vue'
 import {mapActions, mapGetters} from 'vuex'
 
 export default {
-  beforeRouteEnter(to, from, next){
-      next(vm => {
-        vm.setMovies()
-      })
-  },
-  // created(){
-  //   this.setMovies();
+  // beforeRouteEnter(to, from, next){
+  //     next(vm => {
+  //       vm.setMovies()
+  //     })
   // },
+  created(){
+    this.setMovies();
+  },
 
   components: {
     MovieRow
@@ -40,7 +40,6 @@ export default {
   data(){
     return {
       searchTerm: '',
-      errors: [],
       selectedMovies: []
     }
   },
@@ -66,7 +65,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      movies: 'getMovies'
+      movies: 'getMovies',
+      errors: 'getErrors'
     }),
     searchTermTwo(){
       return this.$store.getters.getSearchTerm

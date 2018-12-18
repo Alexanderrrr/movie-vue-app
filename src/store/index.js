@@ -1,14 +1,23 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import router from '../router/router.js'
 import movieService from '../services/MovieService'
 
-Vue.use(Vuex);
 
+Vue.use(Vuex);
+const getUserFromLocalStorage = () => {
+  const user = localStorage.getItem('user');
+  return JSON.parse(user);
+}
 export const store = new Vuex.Store({
 
     state: {
+      user: getUserFromLocalStorage(),
+      token: localStorage.getItem('token'),
       searchTermTwo: "",
-      movies: [],
+      movies: null,
+      newMovie: {},
+      errors: []
     },
 
     actions: {
@@ -16,22 +25,62 @@ export const store = new Vuex.Store({
         commit('CHANGE_SEARCH_TERM')
       },
 
-      async setMovies({commit}, payload){
+      async setMovies({commit}){
         try {
-          let movies = await movieService.getAll(payload);
+          let movies = await movieService.getAll();
           commit('SET_MOVIES', movies)
         } catch (error) {
-            console.log(error);
+            commit('SET_ERRORS', error)
         }
-      }
+      },
+
+      postNewMovie({commit} , payload){
+        try {
+          movieService.add(payload);
+          router.push({name: 'movies'})
+        } catch (error)  {
+            commit('SET_ERRORS', error.response ? error.response.data.message : error);
+        }
+
+      },
+
+
+        async login({ commit }, {email, password, nextRouteName}){
+          try {
+            const {user, token} = await  movieService.login(email, password);
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('token', token);
+            movieService.setAuthHeaders(token);
+            commit('SET_DATA', { user, token });
+            router.push({name: nextRouteName || 'movies'})
+
+          } catch (error){
+              commit('SET_ERRORS', error.response ? error.response.data : error);
+
+            }
+         },
+
+          logout({ commit }) {
+            movieService.setAuthHeaders();
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            commit('SET_DATA', {user: null, token: null})
+            router.push({name: 'login'})
+          }
     },
 
     getters: {
       getSearchTerm(state){
-        return state.searchTermTwo
+        return state.searchTermTwo;
       },
       getMovies(state){
         return state.movies;
+      },
+      getErrors(state){
+        return state.errors;
+      },
+      getUser(state){
+        return state.user;
       }
     },
 
@@ -41,7 +90,18 @@ export const store = new Vuex.Store({
       },
       SET_MOVIES(state, payload){
         state.movies = payload;
-      }
+      },
+      SET_NEW_MOVIE(state, payload){
+        state.newMovie = payload;
+      },
+      SET_ERRORS(state, payload){
+        state.errors = payload
+      },
+      SET_DATA (state, {user, token}) {
+        state.user = user;
+        state.token = token;
+        state.errors = null;
+      },
     }
 
 
