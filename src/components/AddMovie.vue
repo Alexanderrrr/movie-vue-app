@@ -21,9 +21,9 @@
 
       <button type="submit">Add Costumer</button>
     </form>
-    <template v-if="errors.length">
+    <template v-if="errors">
       <ul>
-        <li v-for="error in errors" :key="error.id" class="p-3 mb-2 bg-danger text-white rounded">{{ error[0] }}</li>
+        <li v-for="error in errors" :key="error.id" class="p-3 mb-2 bg-danger text-white rounded">{{ error }}</li>
       </ul>
     </template>
   </div>

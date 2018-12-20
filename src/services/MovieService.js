@@ -24,6 +24,15 @@ export class MovieService
     }).then(({data}) => data);
   }
 
+  register(name, email, password, password_confirmation){
+    return HttpService.post('register', {
+      name,
+      email,
+      password,
+      password_confirmation
+    }).then(({data}) => data);
+  }
+
   setAuthHeaders(token){
     if (!token) {
       delete HttpService.defaults.headers.common['Authorization'];

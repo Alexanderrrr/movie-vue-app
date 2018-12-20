@@ -17,7 +17,7 @@ export const store = new Vuex.Store({
       searchTermTwo: "",
       movies: null,
       newMovie: {},
-      errors: []
+      errors: null
     },
 
     actions: {
@@ -30,16 +30,16 @@ export const store = new Vuex.Store({
           let movies = await movieService.getAll();
           commit('SET_MOVIES', movies)
         } catch (error) {
-            commit('SET_ERRORS', error)
+            commit('SET_ERRORS', error.response ? error.response.data.errors : error);
         }
       },
 
-      postNewMovie({commit} , payload){
+      async postNewMovie({commit} , payload){
         try {
-          movieService.add(payload);
+          await movieService.add(payload);
           router.push({name: 'movies'})
         } catch (error)  {
-            commit('SET_ERRORS', error.response ? error.response.data.message : error);
+            commit('SET_ERRORS', error.response ? error.response.data.errors : error);
         }
 
       },
@@ -57,7 +57,18 @@ export const store = new Vuex.Store({
           } catch (error){
               commit('SET_ERRORS', error.response ? error.response.data : error);
 
-            }
+          }
+         },
+
+         async registerUser({ commit }, { name, email, password, password_confirmation } ) {
+           try {
+             console.log(name, password_confirmation);
+             await movieService.register(name, email, password, password_confirmation);
+             router.push({name: 'login'});
+           } catch (error){
+               commit('SET_ERRORS', error.response ? error.response.data.errors : error);
+
+           }
          },
 
           logout({ commit }) {
@@ -89,6 +100,7 @@ export const store = new Vuex.Store({
         state.searchTermTwo = payload
       },
       SET_MOVIES(state, payload){
+        state.errors = null;
         state.movies = payload;
       },
       SET_NEW_MOVIE(state, payload){

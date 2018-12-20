@@ -15,9 +15,12 @@
             Logout</a>
           </template>
           <router-link class="p-2 text-dark" :to="{name:'login'}" v-if="!user">Login</router-link>
+          <router-link class="p-2 text-dark" :to="{name:'register'}" v-if="!user">Register</router-link>
         </nav>
     </div>
-    <router-view></router-view>
+    <main role="main" class="container">
+      <router-view />
+    </main>
   </div>
 </template>
 
