@@ -19,7 +19,7 @@
         </nav>
     </div>
     <main role="main" class="container">
-      <router-view />
+      <router-view :key="$route.fullPath"/>
     </main>
   </div>
 </template>

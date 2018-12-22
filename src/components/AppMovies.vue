@@ -12,7 +12,7 @@
         <template>
           <div v-for="movie in movies" :key="movie.id">
             <ul v-if="movie.title.toLowerCase().includes(searchTermTwo.toLowerCase())" class="list-group">
-              <movie-row :movie="movie" @callParentFunction="selected(movie)" /><hr>
+                <movie-row :movie="movie" @callParentFunction="selected(movie)" /><hr>
             </ul>
           </div>
         </template>
@@ -30,6 +30,7 @@ export default {
         vm.setMovies()
       })
   },
+
   // created(){
   //   this.setMovies()
   // },

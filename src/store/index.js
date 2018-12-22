@@ -15,8 +15,8 @@ export const store = new Vuex.Store({
       user: getUserFromLocalStorage(),
       token: localStorage.getItem('token'),
       searchTermTwo: "",
-      movies: null,
-      newMovie: {},
+      movies: [],
+      movie: null,
       errors: null
     },
 
@@ -44,6 +44,11 @@ export const store = new Vuex.Store({
 
       },
 
+      singleMovie({commit,state},  payload){
+          let movie = state.movies.find(movie => movie.id == payload)
+          commit('SET_MOVIE', movie)
+      },
+
 
         async login({ commit }, {email, password, nextRouteName}){
           try {
@@ -62,7 +67,6 @@ export const store = new Vuex.Store({
 
          async registerUser({ commit }, { name, email, password, password_confirmation } ) {
            try {
-             console.log(name, password_confirmation);
              await movieService.register(name, email, password, password_confirmation);
              router.push({name: 'login'});
            } catch (error){
@@ -92,6 +96,9 @@ export const store = new Vuex.Store({
       },
       getUser(state){
         return state.user;
+      },
+      getMovie(state){
+        return state.movie
       }
     },
 
@@ -103,8 +110,8 @@ export const store = new Vuex.Store({
         state.errors = null;
         state.movies = payload;
       },
-      SET_NEW_MOVIE(state, payload){
-        state.newMovie = payload;
+      SET_MOVIE(state, payload){
+        state.movie = payload;
       },
       SET_ERRORS(state, payload){
         state.errors = payload
