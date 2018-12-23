@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'bg-dark': selected }">
-    <router-link :to="{ name: 'single-movie', params: {id: movie.id} }">
+    <router-link :to="{ name: 'single-movie', params: {id: Number(movie.id)} }">
       <li class="list-group-item list-group-item-success">{{movie.title}}</li>
     </router-link>
     <li class="list-group-item"><strong>director:</strong> {{movie.director}}</li>

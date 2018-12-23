@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      errors: 'getErrors'
+      errors: 'getMoviesErrors'
     })
   }
 }

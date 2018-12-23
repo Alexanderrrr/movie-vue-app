@@ -7,6 +7,11 @@ export class MovieService
     .then(({data}) => data);
   }
 
+  getOne(id){
+    return HttpService.get(`movies/${id}`)
+    .then(({data}) => data)
+  }
+
   add({title,director,imageUrl,duration,releaseDate,genre}){
     return HttpService.post('movies', {
       title,

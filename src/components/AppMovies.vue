@@ -67,7 +67,7 @@ export default {
   computed: {
     ...mapGetters({
       movies: 'getMovies',
-      errors: 'getErrors'
+      errors: 'getMoviesErrors'
     }),
     searchTermTwo(){
       return this.$store.getters.getSearchTerm

@@ -39,7 +39,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      errors: 'getErrors'
+      errors: 'getAuthErrors'
     })
   }
 }
